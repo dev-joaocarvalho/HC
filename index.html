@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoeBem - Plataforma de Doações</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2e86de;
+            --secondary: #10ac84;
+            --light: #f7f9fc;
+            --dark: #2d3436;
+            --gray: #636e72;
+            --border: #dfe6e9;
+            --shadow: rgba(149, 157, 165, 0.2);
+            --card-bg: #ffffff;
+            --danger: #ff6b6b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .logo i {
+            color: var(--primary);
+            font-size: 28px;
+        }
+        
+        .logo h1 {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-link {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link i {
+            font-size: 18px;
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a73e8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 134, 222, 0.3);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(46, 134, 222, 0.1);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #0e9d7a;
+            transform: translateY(-2px);
+        }
+        
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 30px 0;
+        }
+        
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title h2 {
+            font-size: 32px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            color: var(--gray);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Auth Forms */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .auth-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px var(--shadow);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .auth-tab {
+            padding: 15px 0;
+            flex: 1;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--gray);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--gray);
+        }
+        
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        /* Feed */
+        .feed-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .post-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .post-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .post-content {
+            padding: 20px;
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 12px;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .post-user {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .post-time {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+        
+        .post-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .post-description {
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid var(--border);
+            padding-top: 15px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .post-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .action-btn.primary {
+            background-color: rgba(46, 134, 222, 0.1);
+            color: var(--primary);
+        }
+        
+        .action-btn.primary:hover {
+            background-color: rgba(46, 134, 222, 0.2);
+        }
+        
+        .action-btn.secondary {
+            background-color: rgba(16, 172, 132, 0.1);
+            color: var(--secondary);
+        }
+        
+        .action-btn.secondary:hover {
+            background-color: rgba(16, 172, 132, 0.2);
+        }
+        
+        /* Create Post */
+        .create-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .create-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px var(--shadow);
+            padding: 30px;
+        }
+        
+        .image-upload {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .image-preview {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .image-placeholder {
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 40px 20px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        
+        .image-placeholder:hover {
+            border-color: var(--primary);
+        }
+        
+        .image-placeholder i {
+            font-size: 50px;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        .image-placeholder p {
+            color: var(--gray);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-logo i {
+            color: var(--primary);
+            font-size: 24px;
+        }
+        
+        .footer-logo h3 {
+            color: var(--primary);
+            font-size: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid var(--border);
+            color: var(--gray);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                margin: 15px 0;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <i class="fas fa-hands-helping"></i>
+                    <h1>Doe<span>Bem</span></h1>
+                </a>
+                
+                <div class="nav-links">
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-home"></i>
+                        <span>Início</span>
+                    </a>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-search"></i>
+                        <span>Explorar</span>
+                    </a>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-bell"></i>
+                        <span>Notificações</span>
+                    </a>
+                </div>
+                
+                <div class="user-actions">
+                    <button class="btn btn-primary" id="createBtn">
+                        <i class="fas fa-plus"></i>
+                        <span>Criar Movimento</span>
+                    </button>
+                    <div class="user-avatar">
+                        <div class="post-avatar">JS</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="page-title">
+                <h2>Movimentos de Doação</h2>
+                <p>Descubra e participe de causas que fazem a diferença na vida de quem precisa</p>
+            </div>
+            
+            <!-- Feed de Movimentos -->
+            <div class="feed-grid" id="feedContainer">
+                <!-- As postagens serão inseridas aqui pelo JavaScript -->
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-hands-helping"></i>
+                        <h3>DoeBem</h3>
+                    </div>
+                    <p>Conectando pessoas que querem ajudar com quem precisa de ajuda.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Links Rápidos</h4>
+                    <div class="footer-links">
+                        <a href="#">Sobre nós</a>
+                        <a href="#">Como funciona</a>
+                        <a href="#">Perguntas frequentes</a>
+                        <a href="#">Contato</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Categorias</h4>
+                    <div class="footer-links">
+                        <a href="#">Alimentação</a>
+                        <a href="#">Educação</a>
+                        <a href="#">Saúde</a>
+                        <a href="#">Meio Ambiente</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <div class="footer-links">
+                        <a href="#">Termos de uso</a>
+                        <a href="#">Política de privacidade</a>
+                        <a href="#">Política de cookies</a>
+                        <a href="#">Transparência</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 DoeBem. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de Login/Cadastro -->
+    <div class="modal" id="authModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-tabs">
+                    <div class="auth-tab active" id="loginTab">Login</div>
+                    <div class="auth-tab" id="registerTab">Cadastro</div>
+                </div>
+                
+                <!-- Login Form -->
+                <form id="loginForm" style="display: block;">
+                    <div class="form-group">
+                        <label for="loginEmail">E-mail</label>
+                        <input type="email" id="loginEmail" class="form-control" placeholder="exemplo@email.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Senha</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Digite sua senha" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Entrar
+                    </button>
+                    
+                    <div class="auth-footer">
+                        <p>Esqueceu sua senha? <a href="#">Recuperar senha</a></p>
+                    </div>
+                </form>
+                
+                <!-- Register Form -->
+                <form id="registerForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="registerName">Nome Completo</label>
+                        <input type="text" id="registerName" class="form-control" placeholder="Seu nome completo" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerEmail">E-mail</label>
+                        <input type="email" id="registerEmail" class="form-control" placeholder="exemplo@email.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPassword">Senha</label>
+                        <input type="password" id="registerPassword" class="form-control" placeholder="Crie uma senha forte" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirme sua Senha</label>
+                        <input type="password" id="registerConfirmPassword" class="form-control" placeholder="Digite novamente sua senha" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-secondary" style="width: 100%;">
+                        <i class="fas fa-user-plus"></i>
+                        Criar Conta
+                    </button>
+                    
+                    <div class="auth-footer">
+                        <p>Ao se cadastrar, você concorda com nossos <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Criação de Movimento -->
+    <div class="modal" id="createModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto; padding: 20px 0;">
+        <div class="create-container">
+            <div class="create-card">
+                <h2 style="margin-bottom: 20px; text-align: center;">Criar novo movimento</h2>
+                
+                <div class="image-upload">
+                    <div class="image-placeholder" id="imageUpload">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Clique para adicionar uma imagem</p>
+                        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    </div>
+                    <img src="" alt="Pré-visualização" class="image-preview" id="imagePreview">
+                </div>
+                
+                <div class="form-group">
+                    <label for="postTitle">Título do Movimento</label>
+                    <input type="text" id="postTitle" class="form-control" placeholder="Ex: Ajude crianças carentes com materiais escolares" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postDescription">Descrição</label>
+                    <textarea id="postDescription" class="form-control" rows="5" placeholder="Descreva o propósito do movimento, quem será beneficiado e como as pessoas podem ajudar..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postCategory">Categoria</label>
+                    <select id="postCategory" class="form-control" required>
+                        <option value="">Selecione uma categoria</option>
+                        <option value="education">Educação</option>
+                        <option value="health">Saúde</option>
+                        <option value="food">Alimentação</option>
+                        <option value="environment">Meio Ambiente</option>
+                        <option value="animals">Animais</option>
+                        <option value="other">Outros</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postLocation">Localização (Opcional)</label>
+                    <input type="text" id="postLocation" class="form-control" placeholder="Cidade, Estado">
+                </div>
+                
+                <div class="form-group">
+                    <label for="postGoal">Meta de Arrecadação (Opcional)</label>
+                    <input type="number" id="postGoal" class="form-control" placeholder="Valor em R$">
+                </div>
+                
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button class="btn btn-outline" style="flex: 1;" id="cancelCreate">
+                        Cancelar
+                    </button>
+                    <button class="btn btn-primary" style="flex: 1;" id="publishPost">
+                        <i class="fas fa-paper-plane"></i>
+                        Publicar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados de exemplo para simular um banco de dados
+        const sampleUsers = [
+            { id: 1, name: "João Silva", email: "joao@example.com", avatar: "JS" },
+            { id: 2, name: "Maria Oliveira", email: "maria@example.com", avatar: "MO" },
+            { id: 3, name: "Carlos Santos", email: "carlos@example.com", avatar: "CS" },
+            { id: 4, name: "Ana Pereira", email: "ana@example.com", avatar: "AP" }
+        ];
+
+        const samplePosts = [
+            {
+                id: 1,
+                userId: 1,
+                title: "Doação de Alimentos para Comunidade Carente",
+                description: "Estamos arrecadando alimentos não perecíveis para famílias carentes da região. Sua contribuição pode fazer a diferença!",
+                image: "https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                category: "food",
+                location: "São Paulo, SP",
+                goal: 5000,
+                current: 3200,
+                likes: 42,
+                comments: 8,
+                shares: 15,
+                createdAt: "2023-07-05T14:30:00"
+            },
+            {
+                id: 2,
+                userId: 2,
+                title: "Materiais Escolares para Crianças",
+                description: "Ajude-nos a fornecer materiais escolares para crianças de baixa renda. Vamos juntos garantir um futuro melhor através da educação!",
+                image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                category: "education",
+                location: "Rio de Janeiro, RJ",
+                goal: 8000,
+                current: 6500,
+                likes: 87,
+                comments: 12,
+                shares: 24,
+                createdAt: "2023-07-03T09:15:00"
+            },
+            {
+                id: 3,
+                userId: 3,
+                title: "Campanha de Adoção de Animais",
+                description: "Dezenas de animais abandonados precisam de um lar. Participe da nossa feira de adoção ou ajude com doações para ração e cuidados veterinários.",
+                image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1064&q=80",
+                category: "animals",
+                location: "Belo Horizonte, MG",
+                goal: 3000,
+                current: 1800,
+                likes: 123,
+                comments: 25,
+                shares: 42,
+                createdAt: "2023-07-01T16:45:00"
+            },
+            {
+                id: 4,
+                userId: 4,
+                title: "Reflorestamento de Área Degradada",
+                description: "Junte-se a nós para plantar 1000 mudas de árvores nativas em uma área devastada. Cada árvore plantada é um passo para um planeta mais saudável.",
+                image: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                category: "environment",
+                location: "Curitiba, PR",
+                goal: 7000,
+                current: 4200,
+                likes: 65,
+                comments: 9,
+                shares: 18,
+                createdAt: "2023-06-28T11:20:00"
+            },
+            {
+                id: 5,
+                userId: 1,
+                title: "Tratamento Médico para Criança",
+                description: "Pedro, 5 anos, precisa de tratamento médico especializado. Sua doação pode ajudar a custear as despesas hospitalares e medicamentos.",
+                image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1153&q=80",
+                category: "health",
+                location: "Porto Alegre, RS",
+                goal: 25000,
+                current: 18700,
+                likes: 210,
+                comments: 34,
+                shares: 78,
+                createdAt: "2023-06-25T08:10:00"
+            },
+            {
+                id: 6,
+                userId: 2,
+                title: "Doação de Cobertores para Moradores de Rua",
+                description: "Com a chegada do inverno, estamos arrecadando cobertores para pessoas em situação de rua. Ajude a aquecer quem mais precisa!",
+                image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                category: "other",
+                location: "Salvador, BA",
+                goal: null,
+                current: null,
+                likes: 56,
+                comments: 7,
+                shares: 19,
+                createdAt: "2023-06-20T13:40:00"
+            }
+        ];
+
+        // Estado da aplicação
+        let currentUser = null;
+        let posts = [];
+
+        // Elementos do DOM
+        const feedContainer = document.getElementById('feedContainer');
+        const authModal = document.getElementById('authModal');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginTab = document.getElementById('loginTab');
+        const registerTab = document.getElementById('registerTab');
+        const createBtn = document.getElementById('createBtn');
+        const createModal = document.getElementById('createModal');
+        const cancelCreate = document.getElementById('cancelCreate');
+        const publishPost = document.getElementById('publishPost');
+        const imageUpload = document.getElementById('imageUpload');
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+
+        // Funções auxiliares
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000); // diferença em segundos
+            
+            if (diff < 60) return 'Agora mesmo';
+            if (diff < 3600) return `${Math.floor(diff/60)} min atrás`;
+            if (diff < 86400) return `${Math.floor(diff/3600)} h atrás`;
+            
+            return date.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: 'short'
+            });
+        }
+
+        function getCategoryIcon(category) {
+            const icons = {
+                education: 'fas fa-graduation-cap',
+                health: 'fas fa-heartbeat',
+                food: 'fas fa-utensils',
+                environment: 'fas fa-leaf',
+                animals: 'fas fa-paw',
+                other: 'fas fa-hands-helping'
+            };
+            return icons[category] || 'fas fa-hands-helping';
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                education: 'Educação',
+                health: 'Saúde',
+                food: 'Alimentação',
+                environment: 'Meio Ambiente',
+                animals: 'Animais',
+                other: 'Outros'
+            };
+            return names[category] || 'Outros';
+        }
+
+        function renderPosts() {
+            feedContainer.innerHTML = '';
+            
+            if (posts.length === 0) {
+                feedContainer.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
+                        <i class="fas fa-inbox" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
+                        <h3>Nenhum movimento encontrado</h3>
+                        <p>Seja o primeiro a criar um movimento de doação!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            posts.forEach(post => {
+                const user = sampleUsers.find(u => u.id === post.userId) || sampleUsers[0];
+                const createdAt = formatDate(post.createdAt);
+                const categoryIcon = getCategoryIcon(post.category);
+                const categoryName = getCategoryName(post.category);
+                
+                const progress = post.goal ? `
+                    <div style="margin: 15px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>Arrecadado: R$${post.current.toLocaleString('pt-BR')}</span>
+                            <span>Meta: R$${post.goal.toLocaleString('pt-BR')}</span>
+                        </div>
+                        <div style="height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: ${(post.current / post.goal * 100)}%; background-color: var(--secondary);"></div>
+                        </div>
+                    </div>
+                ` : '';
+                
+                feedContainer.innerHTML += `
+                    <div class="post-card">
+                        <img src="${post.image}" alt="${post.title}" class="post-image">
+                        <div class="post-content">
+                            <div class="post-header">
+                                <div class="post-avatar">${user.avatar}</div>
+                                <div>
+                                    <div class="post-user">${user.name}</div>
+                                    <div class="post-time">${createdAt} • <i class="${categoryIcon}"></i> ${categoryName}</div>
+                                </div>
+                            </div>
+                            
+                            <h3 class="post-title">${post.title}</h3>
+                            <p class="post-description">${post.description}</p>
+                            
+                            ${post.location ? `<p><i class="fas fa-map-marker-alt"></i> ${post.location}</p>` : ''}
+                            
+                            ${progress}
+                            
+                            <div class="post-stats">
+                                <div class="post-stat">
+                                    <i class="fas fa-heart"></i>
+                                    ${post.likes}
+                                </div>
+                                <div class="post-stat">
+                                    <i class="fas fa-comment"></i>
+                                    ${post.comments}
+                                </div>
+                                <div class="post-stat">
+                                    <i class="fas fa-share"></i>
+                                    ${post.shares}
+                                </div>
+                            </div>
+                            
+                            <div class="post-actions">
+                                <div class="action-btn primary">
+                                    <i class="fas fa-heart"></i>
+                                    Apoiar
+                                </div>
+                                <div class="action-btn secondary">
+                                    <i class="fas fa-donate"></i>
+                                    Doar
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Inicialização da aplicação
+        function initApp() {
+            // Carregar dados do localStorage ou usar dados de exemplo
+            const savedPosts = localStorage.getItem('doebem_posts');
+            posts = savedPosts ? JSON.parse(savedPosts) : [...samplePosts];
+            
+            // Verificar se o usuário está logado
+            const savedUser = localStorage.getItem('doebem_user');
+            currentUser = savedUser ? JSON.parse(savedUser) : null;
+            
+            // Renderizar posts
+            renderPosts();
+            
+            // Se não houver usuário logado, mostrar o modal de login
+            if (!currentUser) {
+                setTimeout(() => {
+                    authModal.style.display = 'flex';
+                }, 1000);
+            }
+        }
+
+        // Event Listeners
+        loginTab.addEventListener('click', () => {
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+        });
+
+        registerTab.addEventListener('click', () => {
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            registerForm.style.display = 'block';
+            loginForm.style.display = 'none';
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simulação de autenticação
+            const user = sampleUsers.find(u => u.email === email);
+            
+            if (user && password === '123456') { // Senha fixa para demonstração
+                currentUser = user;
+                localStorage.setItem('doebem_user', JSON.stringify(user));
+                authModal.style.display = 'none';
+                alert(`Bem-vindo de volta, ${user.name}!`);
+            } else {
+                alert('E-mail ou senha incorretos. Tente novamente.');
+            }
+        });
+
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+            
+            // Criar novo usuário
+            const newUser = {
+                id: sampleUsers.length + 1,
+                name,
+                email,
+                avatar: name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
+            };
+            
+            currentUser = newUser;
+            localStorage.setItem('doebem_user', JSON.stringify(newUser));
+            authModal.style.display = 'none';
+            alert(`Conta criada com sucesso! Bem-vindo ao DoeBem, ${name}.`);
+        });
+
+        createBtn.addEventListener('click', () => {
+            if (!currentUser) {
+                authModal.style.display = 'flex';
+                return;
+            }
+            createModal.style.display = 'flex';
+        });
+
+        cancelCreate.addEventListener('click', () => {
+            createModal.style.display = 'none';
+        });
+
+        imageUpload.addEventListener('click', () => {
+            imageInput.click();
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = (event) => {
+                    imagePreview.src = event.target.result;
+                    imagePreview.style.display = 'block';
+                    imageUpload.style.display = 'none';
+                }
+                
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        publishPost.addEventListener('click', () => {
+            const title = document.getElementById('postTitle').value;
+            const description = document.getElementById('postDescription').value;
+            const category = document.getElementById('postCategory').value;
+            const location = document.getElementById('postLocation').value;
+            const goal = document.getElementById('postGoal').value;
+            
+            if (!title || !description || !category) {
+                alert('Preencha os campos obrigatórios: Título, Descrição e Categoria');
+                return;
+            }
+            
+            const newPost = {
+                id: posts.length + 1,
+                userId: currentUser.id,
+                title,
+                description,
+                image: imagePreview.src || 'https://images.unsplash.com/photo-1500993855538-c96a14b0d51c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+                category,
+                location: location || null,
+                goal: goal ? parseInt(goal) : null,
+                current: goal ? Math.floor(parseInt(goal) * 0.3) : null,
+                likes: 0,
+                comments: 0,
+                shares: 0,
+                createdAt: new Date().toISOString()
+            };
+            
+            posts.unshift(newPost);
+            localStorage.setItem('doebem_posts', JSON.stringify(posts));
+            
+            renderPosts();
+            createModal.style.display = 'none';
+            
+            // Resetar formulário
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postDescription').value = '';
+            document.getElementById('postCategory').value = '';
+            document.getElementById('postLocation').value = '';
+            document.getElementById('postGoal').value = '';
+            imagePreview.style.display = 'none';
+            imageUpload.style.display = 'block';
+            
+            alert('Movimento criado com sucesso!');
+        });
+
+        // Fechar modais ao clicar fora
+        window.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                authModal.style.display = 'none';
+            }
+            if (e.target === createModal) {
+                createModal.style.display = 'none';
+            }
+        });
+
+        // Inicializar aplicação
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
