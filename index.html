@@ -656,6 +656,101 @@
             margin-top: 10px;
         }
         
+        /* Image Upload */
+        .image-upload {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .image-preview {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .image-placeholder {
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 40px 20px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        
+        .image-placeholder:hover {
+            border-color: var(--primary);
+        }
+        
+        .image-placeholder i {
+            font-size: 50px;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        .image-placeholder p {
+            color: var(--gray);
+        }
+        
+        /* User Menu */
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        
+        .user-dropdown.show {
+            display: block;
+        }
+        
+        .user-info {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: background-color 0.3s;
+        }
+        
+        .user-dropdown a:hover {
+            background-color: var(--light);
+        }
+        
+        .user-dropdown a i {
+            width: 20px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        
+        .logout-btn {
+            color: var(--danger);
+            border-top: 1px solid var(--border);
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+        
         /* Auth Modal */
         .modal {
             display: none;
@@ -743,64 +838,6 @@
             text-decoration: none;
             font-weight: 500;
         }
-        
-        /* User Menu */
-        .user-menu {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .user-dropdown {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 100%;
-            background-color: white;
-            min-width: 200px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            z-index: 1000;
-            overflow: hidden;
-        }
-        
-        .user-dropdown.show {
-            display: block;
-        }
-        
-        .user-info {
-            padding: 15px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .user-dropdown a {
-            display: block;
-            padding: 12px 15px;
-            text-decoration: none;
-            color: var(--dark);
-            transition: background-color 0.3s;
-        }
-        
-        .user-dropdown a:hover {
-            background-color: var(--light);
-        }
-        
-        .user-dropdown a i {
-            width: 20px;
-            text-align: center;
-            margin-right: 10px;
-        }
-        
-        .logout-btn {
-            color: var(--danger);
-            border-top: 1px solid var(--border);
-        }
-        
-        .logout-btn:hover {
-            background-color: rgba(255, 107, 107, 0.1);
-        }
     </style>
 </head>
 <body>
@@ -817,14 +854,6 @@
                     <a href="#" class="nav-link active" id="homeNav">
                         <i class="fas fa-home"></i>
                         <span>Início</span>
-                    </a>
-                    <a href="#" class="nav-link" id="exploreNav">
-                        <i class="fas fa-search"></i>
-                        <span>Explorar</span>
-                    </a>
-                    <a href="#" class="nav-link" id="profileLink" style="display: none;">
-                        <i class="fas fa-user"></i>
-                        <span>Perfil</span>
                     </a>
                 </div>
                 
@@ -844,14 +873,6 @@
                                     <div class="post-time" id="dropdownEmail"></div>
                                 </div>
                             </div>
-                            <a href="#" id="profileDropdownBtn">
-                                <i class="fas fa-user"></i>
-                                Meu Perfil
-                            </a>
-                            <a href="#" id="myMovementsBtn">
-                                <i class="fas fa-hands-helping"></i>
-                                Meus Movimentos
-                            </a>
                             <a href="#" class="logout-btn" id="logoutBtn">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Sair
@@ -942,6 +963,15 @@
             <div class="create-container">
                 <div class="create-card">
                     <h2 style="margin-bottom: 20px; text-align: center;">Criar novo movimento</h2>
+                    
+                    <div class="image-upload">
+                        <div class="image-placeholder" id="imageUpload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Clique para adicionar uma imagem</p>
+                            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                        </div>
+                        <img src="" alt="Pré-visualização" class="image-preview" id="imagePreview">
+                    </div>
                     
                     <div class="form-group">
                         <label for="postTitle">Título do Movimento</label>
@@ -1230,6 +1260,7 @@
         let currentUser = null;
         let posts = [];
         let currentPost = null;
+        let selectedImage = null;
 
         // Elementos do DOM
         const homePage = document.getElementById('home-page');
@@ -1252,10 +1283,8 @@
         const dropdownEmail = document.getElementById('dropdownEmail');
         const logoutBtn = document.getElementById('logoutBtn');
         const avatarInitials = document.getElementById('avatarInitials');
-        const profileLink = document.getElementById('profileLink');
         const homeLink = document.getElementById('homeLink');
         const homeNav = document.getElementById('homeNav');
-        const exploreNav = document.getElementById('exploreNav');
         const footerHome = document.getElementById('footerHome');
         const footerCreateBtn = document.getElementById('footerCreateBtn');
         const footerLoginBtn = document.getElementById('footerLoginBtn');
@@ -1276,8 +1305,9 @@
         const itemsForm = document.getElementById('itemsForm');
         const itemsContainer = document.getElementById('itemsContainer');
         const addItemBtn = document.getElementById('addItemBtn');
-        const profileDropdownBtn = document.getElementById('profileDropdownBtn');
-        const myMovementsBtn = document.getElementById('myMovementsBtn');
+        const imageUpload = document.getElementById('imageUpload');
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
 
         // Funções auxiliares
         function formatDate(dateString) {
@@ -1334,7 +1364,6 @@
             
             // Atualizar navegação
             homeNav.classList.remove('active');
-            exploreNav.classList.remove('active');
             
             if (page === homePage) {
                 homeNav.classList.add('active');
@@ -1440,23 +1469,10 @@
             });
         }
 
-        function toggleUserMenu() {
-            userDropdown.classList.toggle('show');
-        }
-
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('doebem_user');
-            updateUserUI();
-            showPage(homePage);
-            alert('Você saiu da sua conta com sucesso!');
-        }
-
         function updateUserUI() {
             if (currentUser) {
                 loginBtn.style.display = 'none';
                 userMenu.style.display = 'block';
-                profileLink.style.display = 'flex';
                 
                 // Atualizar avatar e informações
                 avatarInitials.textContent = currentUser.avatar;
@@ -1471,25 +1487,21 @@
             } else {
                 loginBtn.style.display = 'flex';
                 userMenu.style.display = 'none';
-                profileLink.style.display = 'none';
             }
         }
 
-        // Inicialização da aplicação
-        function initApp() {
-            // Carregar dados do localStorage ou usar dados de exemplo
-            const savedPosts = localStorage.getItem('doebem_posts');
-            posts = savedPosts ? JSON.parse(savedPosts) : [...samplePosts];
-            
-            // Verificar se o usuário está logado
-            const savedUser = localStorage.getItem('doebem_user');
-            currentUser = savedUser ? JSON.parse(savedUser) : null;
-            
-            // Atualizar UI do usuário
+        // Função para mostrar/ocultar o menu do usuário
+        function toggleUserMenu() {
+            userDropdown.classList.toggle('show');
+        }
+
+        // Função de logout
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('doebem_user');
             updateUserUI();
-            
-            // Renderizar posts
-            renderPosts();
+            showPage(homePage);
+            alert('Você saiu da sua conta com sucesso!');
         }
 
         // Event Listeners
@@ -1578,12 +1590,6 @@
             showPage(homePage);
         });
 
-        exploreNav.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Para este exemplo, a página de exploração é a mesma da home
-            showPage(homePage);
-        });
-
         footerHome.addEventListener('click', (e) => {
             e.preventDefault();
             showPage(homePage);
@@ -1641,6 +1647,26 @@
             itemsContainer.appendChild(newItem);
         });
 
+        // Upload de imagem
+        imageUpload.addEventListener('click', () => {
+            imageInput.click();
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = (event) => {
+                    imagePreview.src = event.target.result;
+                    imagePreview.style.display = 'block';
+                    imageUpload.style.display = 'none';
+                    selectedImage = event.target.result;
+                }
+                
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
         publishPost.addEventListener('click', () => {
             const title = document.getElementById('postTitle').value;
             const description = document.getElementById('postDescription').value;
@@ -1668,7 +1694,7 @@
                     }
                 });
                 
-                if (items.length === 0) {
+                if (items.length === 0 && (type === 'items' || type === 'reuse')) {
                     alert('Adicione pelo menos um item necessário');
                     return;
                 }
@@ -1679,7 +1705,7 @@
                 userId: currentUser.id,
                 title,
                 description,
-                image: 'https://images.unsplash.com/photo-1500993855538-c96a14b0d51c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+                image: selectedImage || 'https://images.unsplash.com/photo-1500993855538-c96a14b0d51c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
                 type,
                 items,
                 location: location || null,
@@ -1705,6 +1731,9 @@
             typeOptions.forEach(opt => opt.classList.remove('selected'));
             itemsForm.style.display = 'none';
             itemsContainer.innerHTML = '<div class="item-form"><input type="text" class="form-control" placeholder="Nome do item" required><input type="number" class="form-control" placeholder="Quantidade" min="1" required></div>';
+            imagePreview.style.display = 'none';
+            imageUpload.style.display = 'block';
+            selectedImage = null;
         });
 
         // Eventos da página de detalhes
@@ -1728,33 +1757,34 @@
             alert('Compartilhe este movimento nas suas redes sociais!');
         });
 
-        // Eventos do menu do usuário
+        // Menu do usuário
         avatarInitials.addEventListener('click', toggleUserMenu);
         logoutBtn.addEventListener('click', logout);
-        profileDropdownBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('Perfil do usuário (em desenvolvimento)');
-            userDropdown.classList.remove('show');
-        });
-        myMovementsBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('Meus movimentos (em desenvolvimento)');
-            userDropdown.classList.remove('show');
-        });
 
         // Fechar modal ao clicar fora
         window.addEventListener('click', (e) => {
             if (e.target === authModal) {
                 authModal.style.display = 'none';
             }
-            
-            // Fechar menu dropdown ao clicar fora
-            if (!userMenu.contains(e.target)) {
-                userDropdown.classList.remove('show');
-            }
         });
 
         // Inicializar aplicação
+        function initApp() {
+            // Carregar dados do localStorage ou usar dados de exemplo
+            const savedPosts = localStorage.getItem('doebem_posts');
+            posts = savedPosts ? JSON.parse(savedPosts) : [...samplePosts];
+            
+            // Verificar se o usuário está logado
+            const savedUser = localStorage.getItem('doebem_user');
+            currentUser = savedUser ? JSON.parse(savedUser) : null;
+            
+            // Atualizar UI do usuário
+            updateUserUI();
+            
+            // Renderizar posts
+            renderPosts();
+        }
+
         window.addEventListener('DOMContentLoaded', initApp);
         
         // Expor função para o escopo global
